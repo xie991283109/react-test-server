@@ -74,9 +74,25 @@ router.post('/update', (req, res) => {
 
 
 // 获取用户信息的路由(根据cookie中的userid)
+router.get('/user', (req, res) => {
+    const {userid} = req.cookies;
+    if (!userid) {
+        return res.send({code: 1, msg: '请先登录'});
+    }
+
+    UserModel.findOne({_id: userid}, filter, (err, user) => {
+        res.send({code: 0, data: user});
+    })
+});
 
 
 // 获取用户列表(根据类型)
+router.get('/userList', (req, res) => {
+    const {type} = req.query;
+    UserModel.find({type}, filter, (err, users) => {
+        res.send({code: 0, data: users})
+    })
+});
 
 
 //获取当前用户所有相关聊天信息列表
