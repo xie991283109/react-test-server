@@ -96,8 +96,28 @@ router.get('/userList', (req, res) => {
 
 
 //获取当前用户所有相关聊天信息列表
+router.get('/msgList', (req, res) => {
+    const {userid} = req.cookies;
+    UserModel.find((err, userDocs) => {
+        const users = {};
+        userDocs.forEach(doc => {
+            users[doc._id] = {username: doc.username, header: doc.header}
+        });
+
+        ChatModel.find({'$or': [{from: userid}, {to: userid}]}, filter, (err, chatMsgs) => {
+            res.send({code: 0, data: {users, chatMsgs}})
+        })
+    });
+});
 
 
 //修改指定消息为已读
+router.post('/readmsg', (req, res) => {
+    const {from} = req.body;
+    const to = req.cookies.userid;
 
+    ChatModel.update({from, to, read: false}, {read: true}, {multi: true}, (err, doc) => {
+        res.send({code: 0, data: doc.modified})
+    })
+});
 module.exports = router;

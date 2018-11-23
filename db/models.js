@@ -18,7 +18,7 @@ conn.on('connected', () => {
 });
 
 
-/***** 定义Model *****/
+/***** 定义UserModel *****/
 const userSchema = mongoose.Schema({
     username: {type: String, required: true},
     password: {type: String, required: true},
@@ -30,6 +30,20 @@ const userSchema = mongoose.Schema({
     salary: {type: String}  //工资
 });
 const UserModel = mongoose.model('user', userSchema);
-
-
 exports.UserModel = UserModel;
+
+
+/***** 定义ChatModal *****/
+const chatSchema = mongoose.Schema({
+    from: {type: String, required: true},  //发送者id
+    to: {type: String, required: true},  //接受者id
+    chat_id: {type: String, required: true},  //聊天室id
+    content: {type: String, required: true},
+    read: {type: Boolean, default: false},
+    create_time: {type: Number},
+});
+const ChatModel = mongoose.model('chat', chatSchema);
+exports.ChatModel = ChatModel;
+
+
+// module.exports = {UserModel, ChatModel};
